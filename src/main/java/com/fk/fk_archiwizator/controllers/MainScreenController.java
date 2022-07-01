@@ -9,6 +9,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
+import javax.mail.Address;
+import javax.mail.Message;
+
 
 public class MainScreenController {
 
@@ -48,38 +51,55 @@ public class MainScreenController {
             System.out.println("Action aborted...");
         } else {
             System.out.println("Data OK. Trying to log in...");
+            Connect connect = new Connect("FlaKraTest@outlook.com", "dariusflynt2"); // do testow potem usunac
+            connect.getEmail("imap", "outlook.office365.com", "993"); // do testow potem usunac
+            populateListView(connect.getEmails());
         }
 
     }
 
     @FXML
     public void startArchiving() {
-        Connect connect = new Connect();
-        connect.sendEmail();
+
     }
 
     private boolean validateData() {
-        if(loginField.getText().isEmpty()) {
-            System.out.println("Pole login jest puste");
-            loginField.setStyle("-fx-border-color: RED");
-            return false;
-        } else if (!loginField.getText().contains("@")){
-            System.out.println("Niepoprawny format adresu e-mail");
-            loginField.setStyle("-fx-border-color: red");
-            return false;
-        } else {
-            loginField.setStyle("-fx-border-color: default");
-        }
-
-        if(passwordField.getText().isEmpty()) {
-            System.out.println("Pole hasło jest puste");
-            passwordField.setStyle("-fx-border-color: red");
-            return false;
-        } else {
-            passwordField.setStyle("-fx-border-color: default");
-        }
+//        if(loginField.getText().isEmpty()) {
+//            System.out.println("Pole login jest puste");
+//            loginField.setStyle("-fx-border-color: RED");
+//            return false;
+//        } else if (!loginField.getText().contains("@")){
+//            System.out.println("Niepoprawny format adresu e-mail");
+//            loginField.setStyle("-fx-border-color: red");
+//            return false;
+//        } else {
+//            loginField.setStyle("-fx-border-color: default");
+//        }
+//
+//        if(passwordField.getText().isEmpty()) {
+//            System.out.println("Pole hasło jest puste");
+//            passwordField.setStyle("-fx-border-color: red");
+//            return false;
+//        } else {
+//            passwordField.setStyle("-fx-border-color: default");
+//        }
 
         return true;
+    }
+
+    private void populateListView(Message[] emails) {
+        ObservableList<String> headers =FXCollections.observableArrayList ();
+        try {
+            System.out.println(emails[0].getSubject());
+//            String header = "#1 Temat: <" +  emails[0].getSubject() + ">  Nadawca: ";
+            String header = "#1 Temat: <Test programu>  Nadawca: ";
+            Address[] addresses = emails[0].getFrom();
+            header += addresses[0];
+            headers.add(header);
+        } catch (Exception exception) {
+
+        }
+        emailHeadersFields.setItems(headers);
     }
 
 }
